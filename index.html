@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muvstok | Gestão de Carteira</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Carteira</span>
+            </a>
+            <a href="leads.html" class="nav-item">
+                <i class="fa-solid fa-filter"></i>
+                <span>Operação</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <span id="updateTime">Att: Hoje</span>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        
+        <!-- Header -->
+        <header class="top-header">
+            <div class="logo-area">
+                <span class="logo-text">muvstok</span>
+                <span class="separator">|</span>
+                <span class="page-title">GESTÃO DE CARTEIRA</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn">
+                    <i class="fa-solid fa-arrows-rotate"></i> Atualizar
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            
+            <!-- Global Dashboard Filters -->
+            <div class="global-filters">
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-building"></i>
+                    <input type="text" id="globalEmpresa" placeholder="Empresa, CNPJ ou Grupo..." class="muv-input">
+                </div>
+                <select id="globalGrupo" class="muv-select">
+                    <option value="all">Todos os Grupos</option>
+                    <option value="G1">Macromaq</option>
+                    <option value="G2">G. Silva</option>
+                    <option value="G3">Viação SC</option>
+                </select>
+                <select id="globalVendedor" class="muv-select">
+                    <option value="all">Todos os Vendedores</option>
+                    <option value="ana">Ana Paula</option>
+                    <option value="joao">João Carlos</option>
+                    <option value="lucas">Lucas Moura</option>
+                    <option value="thiago">Thiago Silva</option>
+                </select>
+                <select id="globalPeriodo" class="muv-select">
+                    <option value="3m">Últimos 3 Meses</option>
+                    <option value="mes">Mês Atual</option>
+                    <option value="6m">Últimos 6 Meses</option>
+                    <option value="ano">Ano Atual</option>
+                </select>
+            </div>
+
+            <!-- KPI's top row -->
+            <section class="kpi-row">
+                <div class="panel kpi-card dual-card">
+                    <div class="dual-card-top">
+                        <div class="kpi-icon"><i class="fa-solid fa-users-rays"></i></div>
+                        <span class="kpi-label" style="font-size:10px;">TOTAL CARTEIRA</span>
+                        <div class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +8.5%</div>
+                    </div>
+                    <div class="kpi-info-dual" style="justify-content:flex-end;">
+                        <div class="kpi-split right" style="flex:unset;">
+                            <span class="kpi-label">CLIENTES</span>
+                            <h2 id="kpi-total" style="font-size:24px;">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel kpi-card dual-card">
+                    <div class="dual-card-top">
+                        <div class="kpi-icon warning"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <span class="kpi-label" style="font-size:10px;">SAÚDE DA CARTEIRA</span>
+                        <div id="kpi-trend-inativos" class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-down"></i> -1.2% Inativaram</div>
+                    </div>
+                    <div class="kpi-info-dual">
+                        <div class="kpi-split">
+                            <span class="kpi-label">ATIVOS</span>
+                            <h2 id="kpi-ativos" class="ok-txt">0</h2>
+                            <div id="kpi-ativos-novos" style="font-size:10px; color:var(--color-ok); font-weight:700; margin-top:2px;">+0 novos</div>
+                        </div>
+                        <div class="kpi-percent-badge" id="kpi-saude-pct">0%</div>
+                        <div class="kpi-split right">
+                            <span class="kpi-label">INATIVARAM</span>
+                            <h2 id="kpi-inativos" class="danger-txt">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel kpi-card dual-card">
+                    <div class="dual-card-top">
+                        <div class="kpi-icon highlight"><i class="fa-solid fa-handshake"></i></div>
+                        <span class="kpi-label" style="font-size:10px;">COBERTURA B2B</span>
+                    </div>
+                    <div class="kpi-info-dual">
+                        <div class="kpi-split">
+                            <span class="kpi-label">ATRIBUÍDOS</span>
+                            <h2 id="kpi-atribuidos" class="ok-txt">0</h2>
+                            <div class="metric-mom positive" style="margin-top:4px;"><i class="fa-solid fa-arrow-trend-up"></i> +5.2% M/M</div>
+                        </div>
+                        <div class="kpi-percent-badge" id="kpi-cob-pct">0%</div>
+                        <div class="kpi-split right">
+                            <span class="kpi-label">SEM DONO</span>
+                            <h2 id="kpi-orfaos" class="warning-txt">0</h2>
+                            <div class="metric-mom positive" style="margin-top:4px;"><i class="fa-solid fa-arrow-trend-down"></i> -1.5% M/M</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel kpi-card dual-card">
+                    <div class="dual-card-top">
+                        <div class="kpi-icon danger"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                        <span class="kpi-label" style="font-size:10px;">EXPOSIÇÃO FINANCEIRA</span>
+                        <div class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-down"></i> -8.0% Risco</div>
+                    </div>
+                    <div class="kpi-info-dual">
+                        <div class="kpi-split" style="flex:1.5;">
+                            <span class="kpi-label">RECEITA TOTAL</span>
+                            <h2 id="kpi-receita-total">0</h2>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="progress-container" style="margin-top:6px; width:100%; max-width:180px;">
+                                    <div class="progress-rail" style="height:6px;">
+                                        <div id="kpi-receita-progresso" class="progress-fill ok" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <span id="kpi-receita-pct" style="font-size:10px; font-family:monospace; color:var(--text-secondary); font-weight:700;">0%</span>
+                            </div>
+                        </div>
+                        <div class="separator-v"></div>
+                        <div class="kpi-split right">
+                            <span class="kpi-label">RISCO INATIVO</span>
+                            <h2 id="kpi-risco" class="danger-txt">0</h2>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom 2-Column Grid -->
+            <section class="dashboard-grid">
+                
+                <!-- Left Column (Stacked Panels) -->
+                <div class="col-left">
+                    <div class="panel grid-panel flex-panel">
+                        <div class="panel-header" style="margin-bottom: 8px;">
+                            <h3 class="panel-title">Tabela de Recência da última compra</h3>
+                            <p style="font-size:9px; color:var(--text-muted); margin-top:-5px;">Distribuição quantitativa e monetária.</p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="compact-table">
+                                <thead>
+                                    <tr>
+                                        <th>Faixa de Tempo</th>
+                                        <th style="text-align:right">Nº Clientes</th>
+                                        <th style="text-align:right">% Base</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recenciaTbody">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="panel grid-panel flex-panel chart-panel">
+                        <div class="panel-header" style="margin-bottom: 0px;">
+                            <h3 class="panel-title">Raio-X de Atribuição (Financeiro)</h3>
+                        </div>
+                        
+                        <!-- Side-by-Side Flex Layout for Chart & Connected Labels -->
+                        <div class="raiox-container">
+                            <div class="raiox-chart-box">
+                                <canvas id="atribuicaoChart"></canvas>
+                            </div>
+                            <div class="raiox-legend-box" id="raiox-side-legend">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right Column (Enterprise List) -->
+                <div class="panel grid-panel tall-panel">
+                    <div class="panel-header" style="margin-bottom: 12px;">
+                        <h3 class="panel-title" style="margin-bottom:0;">Oportunidades de Carteira</h3>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="list-filters">
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="searchEmpresa" placeholder="Buscar cliente..." class="muv-input">
+                        </div>
+                        <div class="custom-dropdown" id="filterSemDono" style="max-width: 140px;">
+                            <div class="dropdown-header" onclick="this.parentElement.classList.toggle('active')">
+                                <span class="dropdown-title">Filtro: Dono</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="dropdown-list">
+                                <label><input type="checkbox" value="sem_dono" onchange="applyLocalFilters()"> Sem Dono (Órfão)</label>
+                                <label><input type="checkbox" value="atribuido" onchange="applyLocalFilters()"> Atribuído</label>
+                            </div>
+                        </div>
+
+                        <div class="custom-dropdown" id="filterCategoria">
+                            <div class="dropdown-header" onclick="this.parentElement.classList.toggle('active')">
+                                <span class="dropdown-title">Segmentos</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="dropdown-list">
+                                <label><input type="checkbox" value="AUTOPECAS" onchange="applyLocalFilters()"> AUTOPECAS</label>
+                                <label><input type="checkbox" value="SEGURADORA" onchange="applyLocalFilters()"> SEGURADORA</label>
+                                <label><input type="checkbox" value="FROTISTA" onchange="applyLocalFilters()"> FROTISTA</label>
+                                <label><input type="checkbox" value="CONCESSIONARIA" onchange="applyLocalFilters()"> CONCESSIONARIA</label>
+                                <label><input type="checkbox" value="SEM CADASTRO" onchange="applyLocalFilters()"> SEM CADASTRO</label>
+                                <label><input type="checkbox" value="OFICINA ESPECIALIZADA" onchange="applyLocalFilters()"> OFICINA EST.</label>
+                                <label><input type="checkbox" value="TRANSPORTE" onchange="applyLocalFilters()"> TRANSPORTE</label>
+                                <label><input type="checkbox" value="GOVERNO" onchange="applyLocalFilters()"> GOVERNO</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Overview -->
+                    <div id="rankingStatusOverview" style="display:flex; justify-content:space-between; padding:0 4px 12px 4px; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:9.5px; font-weight:800; text-transform:uppercase;">
+                    </div>
+
+                    <div class="list-container" id="empresasList">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
